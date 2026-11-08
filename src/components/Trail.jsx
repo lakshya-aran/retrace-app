@@ -16,6 +16,11 @@ export default function Trail({ state: S, onExample }) {
 
   const arrived = S.stops.length && S.stops[S.stops.length - 1].isNow;
   const rows = [];
+  if (S.before)
+    rows.push(
+      <li key="before" className="before"><span className="pl">{placeName(S.before)}</span><span className="sub">Before that (maybe it never left)</span></li>,
+      <li key="lb" className="leg">…</li>,
+    );
   S.stops.forEach((s, i) => {
     if (i > 0 && s.via)
       rows.push(<li key={`l${i}`} className="leg">{VEH[s.via].l}{s.viaNote ? ` · ${s.viaNote}` : ''}</li>);
@@ -26,6 +31,8 @@ export default function Trail({ state: S, onExample }) {
         {i === 0 && <span className="sub">Last had it here</span>}
         {s.isNow && <span className="sub">You are here now</span>}
         {did && <span className="sub">{did}</span>}
+        {s.still === 'yes' && <span className="mark ok">Still had it when leaving</span>}
+        {s.still === 'gone' && <span className="mark gone">Noticed it missing here</span>}
       </li>,
     );
   });
