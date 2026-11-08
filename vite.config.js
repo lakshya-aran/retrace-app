@@ -1,4 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig({ plugins: [react()] });
+// GitHub Pages serves the site from /retrace-app/, so assets must use that base path.
+export default defineConfig({
+  base: '/retrace-app/',
+  plugins: [react()],
+});
