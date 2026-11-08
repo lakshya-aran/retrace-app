@@ -116,3 +116,19 @@ textarea { width: 100%; min-height: 180px; font-family: var(--mono); font-size: 
 
 @media (prefers-reduced-motion: no-preference) { .rise { animation: rise .28s ease-out; } }
 @keyframes rise { from { transform: translateY(6px); opacity: .6; } to { transform: none; opacity: 1; } }
+
+/* plan: search window, theft alert, insights, home spots */
+.window { display: flex; flex-direction: column; gap: 2px; margin: 0 0 18px; padding: 12px 16px; border-radius: 12px; background: var(--accent-soft); }
+.window .k { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.window .v { font-weight: 700; }
+.window .arrow { color: var(--accent); }
+.alert { margin: 0 0 28px; padding: 14px 16px; border-radius: 12px; background: var(--hi-soft); }
+.alert strong { color: var(--hi); }
+.alert p { margin: 4px 0 0; }
+.insights { margin: 0 0 28px; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; max-width: 64ch; }
+.spots { margin: 0 0 28px; padding-left: 20px; columns: 2 260px; column-gap: 28px; }
+.spots li { margin: 0 0 6px; break-inside: avoid; }
+.tl .mark { display: inline-block; margin-top: 2px; font-family: var(--mono); font-size: 11px; letter-spacing: .04em; padding: 1px 7px; border-radius: 999px; }
+.tl .mark.ok { background: var(--accent-soft); color: var(--accent); }
+.tl .mark.gone { background: var(--hi-soft); color: var(--hi); }
+.tl li.before::before { border-style: dashed; }
