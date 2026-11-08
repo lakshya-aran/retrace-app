@@ -17,5 +17,11 @@ export const itemWord = (S) => itemName(S).toLowerCase().split(' /')[0];
 
 export const allChecks = (S) => (S.item ? [...ITEMS[S.item].checks, ...COMMON_CHECKS] : []);
 
+// Index of the stop where the user noticed the item was gone, or -1
+export const noticedIndex = (S) => S.stops.findIndex((s) => s.still === 'gone');
+
+// Drop the "none / nothing" answer from a multi-select so it doesn't count as a factor
+export const real = (arr) => (arr || []).filter((v) => v !== 'none' && v !== 'calm');
+
 export const uncheckedChecks = (S) =>
   S.checks ? allChecks(S).filter((c) => !S.checks.includes(c.v)) : [];
