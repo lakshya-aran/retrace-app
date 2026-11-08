@@ -3,6 +3,8 @@
 A React app that helps you find something you've lost. It asks one small question at a time,
 rebuilds the journey you took since you last had the item, and ranks the places to look first.
 
+**Live app:** https://lakshya-aran.github.io/retrace-app/
+
 ## How it works
 
 1. **What did you lose?** The item decides which follow-up questions come later
@@ -22,7 +24,7 @@ npm install
 npm run dev
 ```
 
-Then open http://127.0.0.1:5173.
+Then open http://127.0.0.1:5173/retrace-app/.
 
 ## Project layout
 
