@@ -7,15 +7,23 @@ rebuilds the journey you took since you last had the item, and ranks the places 
 
 ## How it works
 
-1. **What did you lose?** The item decides which follow-up questions come later
-   (a phone gets "Is tracking on?", a wallet gets "What was inside?").
-2. **Quick checks.** Obvious places to look for that item. Anything unchecked goes on your to-do list.
-3. **Last seen.** When and where you last *definitely* had it. If you can't remember, it asks for any
-   moment you can picture and shows memory aids (UPI history, Google Maps Timeline, photos).
-4. **Journey.** "After X, where did you go next?", repeated stop by stop: how you travelled
-   (walk, cab, auto, bus, metro…) and what you did at each place.
-5. **Plan.** Places and rides ranked by likelihood, with what to do at each, a "Do these now"
-   checklist and a description you can copy into lost-and-found forms.
+The questions follow how people actually lose things: on autopilot, while distracted,
+on the day a habit breaks, or with a memory that is really from another day.
+
+1. **What did you lose, and how do you usually carry it?** Habit decides where things slip out
+   or get put down. The item also decides later questions (a phone gets "Is tracking on?").
+2. **Quick checks.** Obvious places for that item. Anything unchecked goes on your to-do list.
+3. **Last seen, and how sure.** Did you see it, use it, or are you just assuming? If you're assuming,
+   it also asks where you were *before*, because it may never have left there.
+4. **Journey, stop by stop.** How you travelled, what you did at each place, then a follow-up
+   for each thing you did ("Where exactly did you put it down?", "How did you pay?",
+   "Did you get it back?", "Did you unplug it?"). After each stop: "Did you still have it when you left?"
+   That narrows the window between the last time you surely had it and when you noticed it gone.
+5. **About you.** State of mind (rushed, on a call, tired, with kids), what was different from your
+   routine (another bag, a 'safe' spot), who could have moved it, and what else is missing.
+6. **Plan.** The search window, places ranked by likelihood (a payment record counts as proof
+   you still had it), why the moment feels blank, signs it may have been taken, places people miss
+   at home, a "Do these now" checklist and a description to copy into lost-and-found forms.
 
 ## Run it
 
