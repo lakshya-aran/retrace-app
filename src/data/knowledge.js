@@ -67,8 +67,13 @@ export const DID = [
   { v: 'pay', l: 'Paid for something', w: 2 },
   { v: 'eat', l: 'Ate or drank something', w: 2 },
   { v: 'wash', l: 'Used the washroom', w: 2 },
-  { v: 'remove', l: 'Took off a jacket, bag or helmet', w: 3 },
+  { v: 'remove', l: 'Took off a jacket, bag, helmet, watch or ring', w: 3 },
   { v: 'handed', l: 'Handed it to someone', w: 3 },
+  { v: 'charge', l: 'Charged something or plugged it in', w: 3 },
+  { v: 'changing', l: 'Changed clothes or tried something on', w: 3 },
+  { v: 'hands', l: 'My hands were full', w: 2 },
+  { v: 'call', l: 'Was on a call or texting', w: 2 },
+  { v: 'shopping', l: 'Picked up shopping bags or a parcel', w: 2 },
   { v: 'rush', l: 'It was crowded or I was in a rush', w: 2 },
   { v: 'bagged', l: 'Put it in my bag or pocket', w: -1 },
   { v: 'pass', l: 'Just passed through', w: 0 },
@@ -84,6 +89,126 @@ export const WHEN = [
   { v: 'unsure', l: "I honestly can't remember" },
 ];
 export const WHENL = Object.fromEntries(WHEN.map((w) => [w.v, w.l]));
+
+/* ---------- Human factors: how people actually lose things ---------- */
+
+// Habit decides where things go when we're not paying attention
+export const CARRY = [
+  { v: 'pocket', l: 'Trouser pocket' }, { v: 'jacket', l: 'Jacket or coat pocket' },
+  { v: 'hand', l: 'In my hand' }, { v: 'bag', l: 'In a bag or backpack' },
+  { v: 'wear', l: "I wear it (watch, ring, glasses)" }, { v: 'varies', l: 'It varies' },
+];
+export const CARRYL = Object.fromEntries(CARRY.map((c) => [c.v, c.l]));
+
+// People often "remember" having something just because they usually do
+export const SURE = [
+  { v: 'saw', l: 'I saw it or held it' },
+  { v: 'used', l: 'I used it (a call, a payment, a photo)' },
+  { v: 'assumed', l: "I think so, but I'm assuming" },
+];
+
+// Asked after every stop: narrows the window when it went missing
+export const STILL = [
+  { v: 'yes', l: 'Yes, I remember having it after I left' },
+  { v: 'think', l: 'I think so, but I am not sure' },
+  { v: 'gone', l: 'No, I noticed it missing here' },
+  { v: 'unknown', l: "I don't know" },
+];
+
+// Follow-ups asked when a particular "what happened" answer is ticked at a stop.
+// w adjusts the score for that stop; advice replaces the generic advice for the place.
+export const FOLLOWUPS = {
+  used: { title: (p) => `After using it at ${p}, where did it go?`, hint: 'Picture your hand right after. Did it go back where it lives?', options: [
+    { v: 'sure', l: 'Back in my pocket or bag, I am sure', w: -2 },
+    { v: 'think', l: 'Back in my pocket or bag, I think', w: 0 },
+    { v: 'down', l: 'I put it down next to me', w: 3, advice: "Check every surface within arm's reach of where you stood or sat." },
+    { v: 'blank', l: "I can't picture it", w: 1 }] },
+  down: { title: (p) => `Where exactly did you put it down at ${p}?`, hint: 'Close your eyes and picture the surface.', options: [
+    { v: 'table', l: 'On a table', w: 1, advice: 'Ask whether the table was cleared, and check under it.' },
+    { v: 'counter', l: 'On a counter or billing desk', w: 2, advice: 'Ask the cashier. Counters are where most items get left.' },
+    { v: 'seat', l: 'On the seat next to me', w: 2, advice: 'Check down the sides and back of that seat.' },
+    { v: 'floor', l: 'On the floor or under the seat', w: 2, advice: 'Look under the seat and ask cleaning staff.' },
+    { v: 'shelf', l: 'On a shelf, ledge or windowsill', w: 2, advice: 'Check shelves at hand height near where you stood.' },
+    { v: 'blank', l: "I can't picture it", w: 0 }] },
+  pay: { title: (p) => `How did you pay at ${p}?`, hint: 'Your payment record gives an exact time and place.', options: [
+    { v: 'upi', l: 'Phone (UPI, app or tap)' }, { v: 'card', l: 'Card from my wallet' },
+    { v: 'cash', l: 'Cash' }, { v: 'other', l: 'Someone else paid' }] },
+  eat: { title: () => 'Was a tray, plate or packaging cleared away?', hint: 'Small things get swept away with trays and napkins.', options: [
+    { v: 'me', l: 'Yes, I cleared it myself', w: 2, advice: 'Ask staff to check the tray return and the bins.' },
+    { v: 'staff', l: 'Yes, staff cleared it', w: 2, advice: 'Ask the staff who cleared your table, and check the bins.' },
+    { v: 'no', l: 'No', w: 0 }] },
+  wash: { title: () => 'In the washroom, did you put anything down or hang anything up?', options: [
+    { v: 'shelf', l: 'Put things on a shelf or by the basin', w: 3, advice: 'Ask housekeeping. Basins and shelves are a classic spot.' },
+    { v: 'hook', l: 'Hung a bag or jacket on a hook', w: 3, advice: 'Check the hook on the back of the washroom door.' },
+    { v: 'no', l: 'No', w: 0 }, { v: 'blank', l: "Can't remember", w: 1 }] },
+  remove: { title: (p) => `Where did you put what you took off at ${p}?`, options: [
+    { v: 'chair', l: 'Over a chair back', w: 2, advice: 'Check the chair you used, and ask for the lost & found.' },
+    { v: 'hook', l: 'On a hook or hanger', w: 2, advice: 'Check the hooks and hangers near where you were.' },
+    { v: 'seat', l: 'On the seat or next to me', w: 2, advice: 'Check the seat and the floor around it.' },
+    { v: 'locker', l: 'In a locker or cloakroom', w: 2, advice: 'Check the locker and ask the cloakroom attendant.' },
+    { v: 'blank', l: "Can't remember", w: 1 }] },
+  handed: { title: () => 'Did you definitely get it back?', options: [
+    { v: 'yes', l: 'Yes, definitely', w: -2 },
+    { v: 'unsure', l: 'Not sure', w: 3 },
+    { v: 'no', l: 'No, they may still have it', w: 5 }] },
+  charge: { title: () => 'Did you unplug everything when you left?', hint: 'Chargers and devices on charge are easy to walk away from.', options: [
+    { v: 'yes', l: 'Yes', w: -1 },
+    { v: 'no', l: 'No, or not sure', w: 4, advice: 'Ask about the charging point you used. Staff often keep things left plugged in.' }] },
+  changing: { title: () => 'Did you check where you changed before leaving?', options: [
+    { v: 'yes', l: 'Yes', w: -1 },
+    { v: 'no', l: 'No', w: 3, advice: 'Ask staff to check the changing room and the clothes you tried on.' }] },
+  shopping: { title: () => 'Have you completely emptied those shopping bags or parcels?', hint: 'Things often drop into a shopping bag at the counter.', options: [
+    { v: 'yes', l: 'Yes, every one', w: 0 },
+    { v: 'no', l: 'Not yet', w: 0 }] },
+};
+
+// State of mind: the moment feels blank because attention was elsewhere
+export const MIND = [
+  { v: 'rush', l: 'Rushed or running late' }, { v: 'call', l: 'On a call or texting' },
+  { v: 'tired', l: 'Tired or sleepy' }, { v: 'stress', l: 'Stressed or upset' },
+  { v: 'unwell', l: 'Unwell' }, { v: 'drink', l: 'Had been drinking' },
+  { v: 'kids', l: 'Looking after kids' }, { v: 'hands', l: 'Carrying a lot of things' },
+  { v: 'calm', l: 'Calm, a normal day' },
+];
+export const DISTRACTED = ['rush', 'call', 'tired', 'stress', 'unwell', 'drink', 'kids', 'hands'];
+
+// Broken routines are where habits fail
+export const ROUTINE = [
+  { v: 'bag', l: 'I used a different bag' }, { v: 'clothes', l: 'Different clothes or jacket' },
+  { v: 'route', l: 'A different route or vehicle' }, { v: 'newplace', l: "Went somewhere I don't usually go" },
+  { v: 'safe', l: "I put it somewhere 'safe' on purpose" }, { v: 'carried', l: 'Someone else carried my things' },
+  { v: 'none', l: 'Nothing was different' },
+];
+
+export const OTHERS = [
+  { v: 'family', l: 'Family at home' }, { v: 'kids', l: 'Kids' },
+  { v: 'friend', l: 'A friend or partner who was with me' }, { v: 'colleagues', l: 'Colleagues or classmates' },
+  { v: 'pet', l: 'A pet' }, { v: 'none', l: 'Nobody' },
+];
+
+export const ALSO_MISSING = [
+  { v: 'phone', l: 'Phone' }, { v: 'wallet', l: 'Wallet / purse' }, { v: 'keys', l: 'Keys' },
+  { v: 'bag', l: 'Bag' }, { v: 'other', l: 'Something else' }, { v: 'none', l: 'Nothing else' },
+];
+
+// Spots people miss when searching at home
+export const HOME_SPOTS = {
+  common: [
+    'Pockets of the clothes you wore today and yesterday',
+    'Inside shopping bags, parcels and boxes you brought in',
+    'Laundry basket and washing machine',
+    'Between and under sofa and bed cushions',
+    'Kitchen counter, and inside the fridge (it really happens)',
+    'Bathroom shelf',
+    'The dustbin, in case it went out with packaging',
+    'Your car or under the scooter seat',
+  ],
+  phone: ['Under pillows and blankets', "Next to a charger you don't usually use"],
+  keys: ['Still in the door lock, inside or outside', 'In the bag you carried yesterday'],
+  wallet: ['In the bag or jacket from your last trip out'],
+  earbuds: ['Jeans pockets in the laundry', 'Inside the bed covers'],
+  jewel: ['Next to the washbasin and soap dish', 'Bedside table, and inside the bed'],
+};
 
 // Follow-up questions that only make sense for a particular item
 export const ITEM_QS = {
@@ -109,16 +234,17 @@ export const ITEM_QS = {
 
 export const PHASES = [
   ['item', 'What'], ['checks', 'Quick checks'], ['last', 'Last seen'],
-  ['journey', 'Journey'], ['details', 'Details'], ['plan', 'Your plan'],
+  ['journey', 'Journey'], ['you', 'About you'], ['details', 'Details'], ['plan', 'Your plan'],
 ];
 
 export const EXAMPLE = {
-  item: 'phone', desc: 'Black Redmi Note, clear cover with a metro card tucked behind it', checks: ['pockets', 'call'],
-  now: { kind: 'home', name: 'Home' }, when: '3h', extra: { track: 'android', batt: 'low' },
+  item: 'phone', desc: 'Black Redmi Note, clear cover with a metro card tucked behind it', carry: 'pocket', checks: ['pockets', 'call'],
+  now: { kind: 'home', name: 'Home' }, when: '3h', sure: 'used', extra: { track: 'android', batt: 'low' },
+  mind: ['rush', 'call'], routine: ['bag'], others: ['none'], alsoMissing: ['none'],
   stops: [
-    { kind: 'cafe', name: 'Chai Point, Sector 18', did: ['used', 'down', 'pay', 'rush'] },
-    { kind: 'atm', name: 'SBI ATM', via: 'walk', did: ['pass'] },
-    { kind: 'station', name: 'Sector 18 metro', via: 'metro', viaNote: 'Blue line towards Dwarka, around 4:40 pm', did: ['seat'] },
-    { kind: 'home', name: 'Home', via: 'auto', viaNote: 'Paid ₹60 by UPI, green auto', isNow: true },
+    { kind: 'cafe', name: 'Chai Point, Sector 18', did: ['used', 'pay', 'call', 'rush'], f: { used: 'blank', pay: 'upi' }, still: 'think' },
+    { kind: 'atm', name: 'SBI ATM', via: 'walk', did: ['pass'], f: {}, still: 'unknown' },
+    { kind: 'station', name: 'Sector 18 metro', via: 'metro', viaNote: 'Blue line towards Dwarka, around 4:40 pm', did: ['seat', 'hands'], f: {}, still: 'unknown' },
+    { kind: 'home', name: 'Home', via: 'auto', viaNote: 'Green auto, paid ₹60 cash', isNow: true, f: {} },
   ],
 };
